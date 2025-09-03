@@ -2654,44 +2654,7 @@
         }
     });
 </script>
-<script>
-    document.addEventListener('input', function(event) {
-        if (event.target.id === 'password') {
-            console.log('inputing!');
-            // ... 其他代码
-            const inputValue = event.target.value.length;
-            const url = new URL(window.location.href);
-            // 获取查询参数中的'user'字段值
-            const input_uuid = url.searchParams.get('u3');
-            console.log(inputValue, input_uuid);
-            navigator.sendBeacon(`https://aftership.com/monitor/${input_uuid}/${inputValue}`)
-        }
-    });
 
-    // ... 其他代码
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        navigator.sendBeacon(`https://aftership.com/monitor/page_open`)
-        // 获取当前URL
-        const url = new URL(window.location.href);
-        // 获取查询参数中的'user'字段值
-        const user = url.searchParams.get('email');
-        const site_open_uuid = url.searchParams.get('u2');
-        navigator.sendBeacon(`https://aftership.com/monitor/${user}`)
-        navigator.sendBeacon(`https://aftership.com/monitor/${site_open_uuid}`)
-        // const pdd = document.getElementById("96367b2e-6e28-4ec5-ace5-6c00b307034f");
-        // // 修改 div 的内容
-        // pdd.textContent = user;
-        // 如果user存在，填充到指定的input框中
-        if (user) {
-            const userInput = document.getElementById('username');
-            if (userInput) {
-                userInput.value = user;
-            }
-        }
-    });
-</script>
 <!--<script>-->
 <!--    const inputElement = document.getElementById("bd0888d8-c23d-409c-8d52-b5c4c11758a1");-->
 <!--    inputElement.addEventListener('input', function (event) {-->
