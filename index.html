@@ -68,6 +68,43 @@
     <script src="https://www.hubspot.com/wt-assets/static-files/compliance/index.js" type="text/javascript" defer=""
             nonce=""></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* 登录按钮悬停样式 */
+        .private-button--primary:not(.private-button--disabled):hover {
+            background-color: #0056b3 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 86, 179, 0.3) !important;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .private-button--primary:not(.private-button--disabled):active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 86, 179, 0.3) !important;
+        }
+        
+        /* 输入框验证样式 */
+        .form-control.error {
+            border-color: #ff6b6b !important;
+            box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2) !important;
+        }
+        
+        .form-control.error:focus {
+            border-color: #ff6b6b !important;
+            box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.3) !important;
+        }
+        
+        /* 错误消息样式 */
+        .error-message {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+    </style>
     <script>
         (function () {
             const config = {
@@ -2599,7 +2636,7 @@
         <p>To keep things fair for everyone else, please don't share this message outside. </p>
         <p>Next up, click on the link below to check out our training materials on how to avoid phishing scams. 👇👇</p>
         <!--        <p>https://www.notion.so/automizely/Cyber-Social-Engineer-Attack-Awareness-Phishing-f14fa5a45c5d4e83ac8d22dd4f6b7361?pvs=4</p>-->
-        <a href="https://www.notion.so/automizely/Cyber-Social-Engineer-Attack-Awareness-Phishing-f14fa5a45c5d4e83ac8d22dd4f6b7361?pvs=4"
+        <a href="https://www.notion.so/automizely/10-Phishing-Attack-Prevention-4bbd6e1a5e5a45bd9a6b9c0342ecb22f#4bbd6e1a5e5a45bd9a6b9c0342ecb22f"
            id="notion-link">How to Prevent Phishing Attacks</a>
     </div>
 </div>
@@ -2629,9 +2666,62 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // 显示弹窗
-                if (modal) {
-                    modal.style.display = "block";
+                // 获取输入值
+                const usernameInput = document.getElementById('username');
+                const passwordInput = document.getElementById('password');
+                
+                // 验证输入
+                let isValid = true;
+                let errorMessage = '';
+                
+                // 检查邮箱是否为空或格式不正确
+                if (!usernameInput || !usernameInput.value.trim()) {
+                    isValid = false;
+                    errorMessage = 'Please enter your email address';
+                } else {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(usernameInput.value.trim())) {
+                        isValid = false;
+                        errorMessage = 'Please enter a valid email address';
+                    }
+                }
+                
+                // 检查密码是否为空或太短
+                if (!passwordInput || !passwordInput.value.trim()) {
+                    isValid = false;
+                    errorMessage = 'Please enter your password';
+                } else if (passwordInput.value.length < 6) {
+                    isValid = false;
+                    errorMessage = 'Password must be at least 6 characters long';
+                }
+                
+                // 清除之前的错误状态
+                if (usernameInput) {
+                    usernameInput.classList.remove('error');
+                }
+                if (passwordInput) {
+                    passwordInput.classList.remove('error');
+                }
+                
+                // 如果验证通过，显示弹窗
+                if (isValid) {
+                    if (modal) {
+                        modal.style.display = "block";
+                    }
+                } else {
+                    // 显示错误状态
+                    if (errorMessage.includes('email')) {
+                        if (usernameInput) {
+                            usernameInput.classList.add('error');
+                        }
+                    } else if (errorMessage.includes('password')) {
+                        if (passwordInput) {
+                            passwordInput.classList.add('error');
+                        }
+                    }
+                    
+                    // 显示错误信息（使用更友好的提示）
+                    console.log('Validation error:', errorMessage);
                 }
                 
                 // 阻止按钮的默认提交行为
@@ -2652,9 +2742,24 @@
         if (modal) {
             modal.style.display = "none";
         }
+        
+        // 添加输入框实时验证
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        
+        if (usernameInput) {
+            usernameInput.addEventListener('input', function() {
+                this.classList.remove('error');
+            });
+        }
+        
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                this.classList.remove('error');
+            });
+        }
     });
 </script>
-
 <!--<script>-->
 <!--    const inputElement = document.getElementById("bd0888d8-c23d-409c-8d52-b5c4c11758a1");-->
 <!--    inputElement.addEventListener('input', function (event) {-->
