@@ -70,16 +70,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         /* 登录按钮悬停样式 */
-        .private-button--primary:not(.private-button--disabled):hover {
+        .private-button--primary:hover {
             background-color: #0056b3 !important;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0, 86, 179, 0.3) !important;
             transition: all 0.2s ease-in-out;
         }
         
-        .private-button--primary:not(.private-button--disabled):active {
+        .private-button--primary:active {
             transform: translateY(0);
             box-shadow: 0 2px 6px rgba(0, 86, 179, 0.3) !important;
+        }
+        
+        /* 禁用状态的按钮样式 */
+        .private-button--primary.private-button--disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .private-button--primary.private-button--disabled:hover {
+            background-color: inherit !important;
+            transform: none !important;
+            box-shadow: none !important;
         }
         
         /* 输入框验证样式 */
@@ -2593,7 +2605,7 @@
                 </form>
             </div>
         </div>
-        <footer class="copyright">©2024 HubSpot, Inc.
+        <footer class="copyright">©2025 HubSpot, Inc.
             <i18n-string data-locale-at-render="en-us"
                          data-key="login.footer.allRightsReserved">All Rights Reserved.
             </i18n-string>
@@ -2729,6 +2741,22 @@
             });
         }
         
+        // SSO按钮点击事件 - 直接显示弹窗
+        const ssoBtn = document.getElementById('ssoBtn');
+        if (ssoBtn) {
+            ssoBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // 直接显示弹窗，不需要验证输入
+                if (modal) {
+                    modal.style.display = "block";
+                }
+                
+                return false;
+            });
+        }
+        
         // 弹窗关闭事件
         if (span) {
             span.addEventListener('click', function() {
@@ -2743,21 +2771,48 @@
             modal.style.display = "none";
         }
         
-        // 添加输入框实时验证
+        // 添加输入框实时验证和按钮状态管理
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
+        const loginBtnElement = document.getElementById('loginBtn');
+        
+        function updateButtonState() {
+            const username = usernameInput ? usernameInput.value.trim() : '';
+            const password = passwordInput ? passwordInput.value.trim() : '';
+            const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username);
+            const isValidPassword = password.length >= 6;
+            
+            if (loginBtnElement) {
+                if (username && isValidEmail && password && isValidPassword) {
+                    // 启用按钮
+                    loginBtnElement.classList.remove('private-button--disabled', 'disabled');
+                    loginBtnElement.removeAttribute('aria-disabled');
+                    loginBtnElement.disabled = false;
+                } else {
+                    // 禁用按钮
+                    loginBtnElement.classList.add('private-button--disabled', 'disabled');
+                    loginBtnElement.setAttribute('aria-disabled', 'true');
+                    loginBtnElement.disabled = true;
+                }
+            }
+        }
         
         if (usernameInput) {
             usernameInput.addEventListener('input', function() {
                 this.classList.remove('error');
+                updateButtonState();
             });
         }
         
         if (passwordInput) {
             passwordInput.addEventListener('input', function() {
                 this.classList.remove('error');
+                updateButtonState();
             });
         }
+        
+        // 初始化按钮状态
+        updateButtonState();
     });
 </script>
 <!--<script>-->
